@@ -161,6 +161,13 @@
     }
     .seat-row .seat-label { font-weight: 600; font-size: .95rem; }
     .seat-row .seat-harga { font-size: 1.25rem; font-weight: 800; color: var(--emas-tua); }
+    /* Kartu yang isinya cuma satu harga (bandara & carter) — tampilkan besar & center */
+    .harga-tunggal {
+      text-align: center; padding: 18px 0; margin: 4px 0 2px;
+      border-top: 1px dashed #e3e9f0;
+    }
+    .harga-tunggal .angka { font-size: 2rem; font-weight: 800; color: var(--emas-tua); line-height: 1.2; }
+    .harga-tunggal .ket { display: block; font-size: .8rem; color: var(--abu-teks); font-weight: 500; margin-top: 2px; }
     .harga-sub { margin-top: 60px; }
     .btn-pesan { width: 100%; justify-content: center; margin-top: 14px; padding: 12px; }
 
@@ -301,7 +308,7 @@
 
     // --- Identitas Bisnis ---
     namaBisnis: "MITRA JAYA TRAVEL",
-    tagline: "Layanan antar jemput, carter, dan travel reguler terpercaya. Armada nyaman, driver berpengalaman, harga transparan.",
+    tagline: "Layanan travel dan carter terpercaya. Armada nyaman, driver berpengalaman, harga transparan.",
 
     // --- Kontak (PENTING) ---
     // Nomor WhatsApp: tulis pakai 62 di depan, tanpa spasi/tanda. Contoh: 081... -> 6281...
@@ -461,7 +468,7 @@
 
       <div class="section-head harga-sub">
         <h2>Carter (1 Mobil)</h2>
-        <p>Satu mobil penuh untuk Anda serombongan. Jadwal fleksibel, BBM &amp; driver sudah termasuk.</p>
+        <p>Jadwal fleksibel, BBM &amp; driver sudah termasuk.</p>
       </div>
       <div class="grid grid-2" id="carterList"></div>
     </div>
@@ -571,9 +578,7 @@
     document.getElementById('ruteList').innerHTML = P.ruteBandara.map((r, i) => `
       <div class="card price-card">
         <h3 class="rute-nama">✈️ ${r.tujuan}</h3>
-        <div class="seat-row">
-          <div class="seat-harga">${r.harga}</div>
-        </div>
+        <div class="harga-tunggal"><span class="angka">${r.harga}</span></div>
         <button class="btn btn-wa btn-pesan" onclick="bukaPesan({layanan:'bandara', rute:${i}})">${WA_IC} Pesan</button>
       </div>
     `).join('');
@@ -598,9 +603,7 @@
       <div class="card price-card">
         <h3 class="rute-nama">🚐 ${r.rute}</h3>
         ${r.tol ? '<span class="badge-tol">🛣️ Termasuk Tarif Tol</span>' : ''}
-        <div class="seat-row">
-          <div class="seat-harga">${r.harga}</div>
-        </div>
+        <div class="harga-tunggal"><span class="angka">${r.harga}</span></div>
         <button class="btn btn-wa btn-pesan" onclick="bukaPesan({layanan:'carter', rute:${i}})">${WA_IC} Pesan</button>
       </div>
     `).join('');
