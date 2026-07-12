@@ -158,8 +158,55 @@
     }
     .seat-row .seat-label { font-weight: 600; font-size: .95rem; }
     .seat-row .seat-harga { font-size: 1.25rem; font-weight: 800; color: var(--emas-tua); }
-    .seat-row .btn { padding: 9px 18px; font-size: .9rem; flex-shrink: 0; }
     .harga-sub { margin-top: 60px; }
+    .btn-pesan { width: 100%; justify-content: center; margin-top: 14px; padding: 12px; }
+
+    /* ---------- POPUP PEMESANAN (WIZARD) ---------- */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(8, 40, 72, .6); backdrop-filter: blur(4px);
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay[hidden] { display: none; }
+    .modal {
+      background: #fff; width: 100%; max-width: 440px;
+      border-radius: 20px 20px 0 0; padding: 26px 24px;
+      position: relative; animation: naik .25s ease;
+      max-height: 85vh; overflow-y: auto;
+    }
+    @media (min-width: 600px) {
+      .modal-overlay { align-items: center; padding: 20px; }
+      .modal { border-radius: 20px; }
+    }
+    @keyframes naik { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { .modal { animation: none; } }
+    .modal h3 { color: var(--biru); font-size: 1.3rem; margin-bottom: 4px; }
+    .modal-sub { color: var(--abu-teks); font-size: .88rem; margin-bottom: 18px; }
+    .modal-close {
+      position: absolute; top: 16px; right: 16px; width: 34px; height: 34px;
+      border: none; border-radius: 50%; background: var(--abu); color: var(--biru-tua);
+      font-size: 1rem; cursor: pointer; display: grid; place-items: center;
+    }
+    .opsi {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      width: 100%; text-align: left; background: #fff; cursor: pointer;
+      border: 1.5px solid #e3e9f0; border-radius: 12px; padding: 14px 16px;
+      margin-bottom: 10px; font-family: inherit; font-size: 1rem; transition: .2s;
+    }
+    .opsi:hover { border-color: var(--emas); background: rgba(244,163,0,.06); }
+    .opsi b { color: var(--biru-tua); display: block; }
+    .opsi small { color: var(--abu-teks); font-size: .82rem; }
+    .opsi .opsi-harga { font-weight: 800; color: var(--emas-tua); white-space: nowrap; }
+    .link-kembali {
+      background: none; border: none; padding: 0; margin-bottom: 14px;
+      color: var(--abu-teks); font-family: inherit; font-size: .9rem; cursor: pointer;
+    }
+    .link-kembali:hover { color: var(--biru); }
+    .ringkas { background: var(--abu); border-radius: 12px; padding: 16px 18px; margin-bottom: 16px; }
+    .ringkas div { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; font-size: .95rem; }
+    .ringkas .lbl { color: var(--abu-teks); }
+    .ringkas .val { font-weight: 600; text-align: right; }
+    .ringkas .val.harga-final { font-weight: 800; color: var(--emas-tua); font-size: 1.1rem; }
 
     /* ---------- LAYANAN ---------- */
     .layanan-list { list-style: none; margin: 16px 0 22px; }
@@ -288,8 +335,8 @@
     // --- Tarif Antar Jemput Bandara ---
     // Tambah/hapus baris sesuai kebutuhan (tinggal salin satu blok { ... }).
     ruteBandara: [
-      { tujuan: "Bandara Samarinda (AAP)",  durasi: "2-3 Jam perjalanan",  harga: "Rp 600.000" },
-      { tujuan: "Bandara Balikpapan (BPN)", durasi: "5-6 Jam perjalanan",  harga: "Rp 1.100.000" }
+      { tujuan: "Bandara Samarinda (AAP)",  harga: "Rp 600.000" },
+      { tujuan: "Bandara Balikpapan (BPN)", harga: "Rp 1.100.000" }
     ],
 
     // --- Harga Travel Reguler (per kursi) ---
@@ -297,7 +344,6 @@
     ruteReguler: [
       {
         rute: "Bontang ⇌ Samarinda",
-        durasi: "±3 Jam perjalanan",
         tol: false,
         seat: [
           { nama: "Seat Tengah", harga: "Rp 200.000" },
@@ -306,7 +352,6 @@
       },
       {
         rute: "Bontang ⇌ Balikpapan",
-        durasi: "±5 Jam perjalanan via Tol",
         tol: true,
         seat: [
           { nama: "Seat Tengah", harga: "Rp 350.000" },
@@ -317,8 +362,8 @@
 
     // --- Harga Carter (1 mobil penuh) ---
     ruteCarter: [
-      { rute: "Bontang ⇌ Samarinda (Kota)", durasi: "±3 Jam perjalanan",         tol: false, harga: "Rp 650.000" },
-      { rute: "Bontang ⇌ Balikpapan",       durasi: "±5 Jam perjalanan via Tol", tol: true,  harga: "Rp 1.150.000" }
+      { rute: "Bontang ⇌ Samarinda (Kota)", tol: false, harga: "Rp 650.000" },
+      { rute: "Bontang ⇌ Balikpapan",       tol: true,  harga: "Rp 1.150.000" }
     ],
 
     // --- Layanan Utama ---
@@ -392,7 +437,7 @@
           <li><a href="#oleholeh">Oleh-Oleh</a></li>
           <li><a href="#kontak">Kontak</a></li>
         </ul>
-        <a class="btn btn-wa nav-cta" id="navWa" href="#">💬 Pesan Sekarang</a>
+        <button class="btn btn-wa nav-cta" onclick="bukaPesan()">💬 Pesan Sekarang</button>
         <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
       </nav>
     </div>
@@ -404,8 +449,8 @@
       <h1 id="heroJudul"></h1>
       <p id="heroTagline"></p>
       <div class="hero-btns">
-        <a class="btn btn-emas" id="heroCarter" href="#">🚐 Pesan Carter</a>
-        <a class="btn btn-outline" id="heroReguler" href="#">🚌 Pesan Reguler</a>
+        <button class="btn btn-emas" onclick="bukaPesan()">🚐 Pesan Sekarang</button>
+        <a class="btn btn-outline" href="#harga">Lihat Harga</a>
       </div>
       <div class="stats" id="stats"></div>
     </div>
@@ -497,6 +542,16 @@
   <!-- TOMBOL WA MENGAMBANG -->
   <a class="wa-float" id="waFloat" href="#" aria-label="Chat WhatsApp">💬</a>
 
+  <!-- POPUP PEMESANAN -->
+  <div class="modal-overlay" id="pesanModal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Tutup">✕</button>
+      <h3 id="modalTitle">Pesan Layanan</h3>
+      <p class="modal-sub" id="modalSub"></p>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
 
   <!-- ================================================================= -->
   <!--  MESIN WEBSITE — tidak perlu diedit                               -->
@@ -514,12 +569,9 @@
     document.getElementById('heroTagline').textContent = P.tagline;
     document.getElementById('tahun').textContent = new Date().getFullYear();
 
-    // Tombol WhatsApp
-    document.getElementById('navWa').href   = waLink(`Halo ${P.namaBisnis}, saya ingin bertanya tentang layanan travel.`);
+    // Tombol WhatsApp (chat langsung untuk tanya-tanya)
     document.getElementById('waFloat').href = waLink(`Halo ${P.namaBisnis}, saya ingin bertanya tentang layanan travel.`);
     document.getElementById('kontakWa').href= waLink(`Halo ${P.namaBisnis}, saya ingin memesan layanan travel.`);
-    document.getElementById('heroCarter').href  = waLink(`Halo ${P.namaBisnis}, saya ingin memesan layanan CARTER.`);
-    document.getElementById('heroReguler').href = waLink(`Halo ${P.namaBisnis}, saya ingin memesan layanan REGULER.`);
 
     // Statistik
     document.getElementById('stats').innerHTML = P.statistik.map(s =>
@@ -527,50 +579,43 @@
     ).join('');
 
     // Tarif bandara
-    document.getElementById('ruteList').innerHTML = P.ruteBandara.map(r => `
-      <a class="rute" href="${waLink(`Halo ${P.namaBisnis}, saya mau pesan antar jemput tujuan ${r.tujuan} (${r.harga}).`)}">
-        <div class="rute-info">
-          <h3>✈️ ${r.tujuan}</h3>
-          <div class="durasi">🕒 ${r.durasi}</div>
+    document.getElementById('ruteList').innerHTML = P.ruteBandara.map((r, i) => `
+      <div class="card price-card">
+        <h3 class="rute-nama">✈️ ${r.tujuan}</h3>
+        <div class="seat-row">
+          <div class="seat-label">1 Mobil Penuh</div>
+          <div class="seat-harga">${r.harga}</div>
         </div>
-        <div class="rute-harga">
-          <div class="harga">${r.harga}</div>
-          <small style="color:var(--abu-teks)">Klik untuk pesan</small>
-        </div>
-      </a>
+        <button class="btn btn-wa btn-pesan" onclick="bukaPesan({layanan:'bandara', rute:${i}})">💬 Pesan</button>
+      </div>
     `).join('');
 
     // Harga travel reguler (per kursi)
-    document.getElementById('regulerList').innerHTML = P.ruteReguler.map(r => `
+    document.getElementById('regulerList').innerHTML = P.ruteReguler.map((r, i) => `
       <div class="card price-card">
         <h3 class="rute-nama">🚐 ${r.rute}</h3>
-        <div class="durasi">🕒 ${r.durasi}</div>
         ${r.tol ? '<span class="badge-tol">🛣️ Include Jalan Tol</span>' : ''}
         ${r.seat.map(s => `
           <div class="seat-row">
-            <div>
-              <div class="seat-label">${s.nama}</div>
-              <div class="seat-harga">${s.harga}</div>
-            </div>
-            <a class="btn btn-wa" href="${waLink(`Halo ${P.namaBisnis}, saya mau pesan Travel Reguler rute ${r.rute}, ${s.nama} (${s.harga}).`)}">💬 Pesan</a>
+            <div class="seat-label">${s.nama}</div>
+            <div class="seat-harga">${s.harga}</div>
           </div>
         `).join('')}
+        <button class="btn btn-wa btn-pesan" onclick="bukaPesan({layanan:'reguler', rute:${i}})">💬 Pesan</button>
       </div>
     `).join('');
 
     // Harga carter (1 mobil)
-    document.getElementById('carterList').innerHTML = P.ruteCarter.map(r => `
-      <a class="rute" href="${waLink(`Halo ${P.namaBisnis}, saya mau Carter rute ${r.rute} (${r.harga}).`)}">
-        <div class="rute-info">
-          <h3>🚐 ${r.rute}</h3>
-          <div class="durasi">🕒 ${r.durasi}</div>
-          ${r.tol ? '<span class="badge-tol">🛣️ Include Jalan Tol</span>' : ''}
+    document.getElementById('carterList').innerHTML = P.ruteCarter.map((r, i) => `
+      <div class="card price-card">
+        <h3 class="rute-nama">🚐 ${r.rute}</h3>
+        ${r.tol ? '<span class="badge-tol">🛣️ Include Jalan Tol</span>' : ''}
+        <div class="seat-row">
+          <div class="seat-label">1 Mobil Penuh</div>
+          <div class="seat-harga">${r.harga}</div>
         </div>
-        <div class="rute-harga">
-          <div class="harga">${r.harga}</div>
-          <small style="color:var(--abu-teks)">per mobil — klik untuk pesan</small>
-        </div>
-      </a>
+        <button class="btn btn-wa btn-pesan" onclick="bukaPesan({layanan:'carter', rute:${i}})">💬 Pesan</button>
+      </div>
     `).join('');
 
     // Layanan
@@ -581,8 +626,7 @@
         <h3>${l.nama}</h3>
         <p>${l.deskripsi}</p>
         <ul class="layanan-list">${l.poin.map(p => `<li>${p}</li>`).join('')}</ul>
-        <a class="btn btn-wa" style="width:100%;justify-content:center"
-           href="${waLink(`Halo ${P.namaBisnis}, saya ingin memesan ${l.nama}.`)}">💬 Pesan ${l.nama}</a>
+        <button class="btn btn-wa btn-pesan" onclick="bukaPesan()">💬 Pesan Sekarang</button>
       </div>
     `).join('');
 
@@ -631,6 +675,117 @@
     const links = document.getElementById('navLinks');
     toggle.addEventListener('click', () => links.classList.toggle('open'));
     links.addEventListener('click', e => { if (e.target.tagName === 'A') links.classList.remove('open'); });
+
+    // ================= POPUP PEMESANAN (WIZARD) =================
+    // Alur: Pilih Layanan -> Pilih Rute -> Pilih Seat (reguler saja) -> Konfirmasi -> WhatsApp
+    const LAYANAN_OPSI = [
+      { id: 'reguler', ikon: '🚌', nama: 'Travel Reguler',        desk: 'Harga per kursi, jadwal tetap' },
+      { id: 'carter',  ikon: '🚐', nama: 'Carter (1 Mobil)',      desk: 'Mobil penuh, jadwal fleksibel' },
+      { id: 'bandara', ikon: '✈️', nama: 'Antar Jemput Bandara',  desk: 'Dari / ke bandara' }
+    ];
+    const modalEl   = document.getElementById('pesanModal');
+    const modalBody = document.getElementById('modalBody');
+    let pesanan = {};
+
+    function bukaPesan(pre) {
+      pesanan = Object.assign({}, pre || {});
+      renderPesan();
+      modalEl.hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+    function tutupPesan() {
+      modalEl.hidden = true;
+      document.body.style.overflow = '';
+    }
+    document.getElementById('modalClose').addEventListener('click', tutupPesan);
+    modalEl.addEventListener('click', e => { if (e.target === modalEl) tutupPesan(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modalEl.hidden) tutupPesan(); });
+
+    function daftarRute(layanan) {
+      if (layanan === 'reguler') return P.ruteReguler.map(r => ({ nama: r.rute, tol: r.tol, harga: 'mulai ' + r.seat[0].harga }));
+      if (layanan === 'carter')  return P.ruteCarter.map(r => ({ nama: r.rute, tol: r.tol, harga: r.harga }));
+      return P.ruteBandara.map(r => ({ nama: r.tujuan, tol: false, harga: r.harga }));
+    }
+
+    function setJudul(judul, sub) {
+      document.getElementById('modalTitle').textContent = judul;
+      document.getElementById('modalSub').textContent = sub;
+    }
+
+    function renderPesan() {
+      const s = pesanan;
+      let html = '';
+      const tombolKembali = '<button class="link-kembali" data-aksi="kembali">‹ Kembali</button>';
+
+      if (s.layanan === undefined) {
+        setJudul('Pilih Layanan', 'Mau pesan layanan yang mana?');
+        html = LAYANAN_OPSI.map(o =>
+          `<button class="opsi" data-aksi="layanan" data-val="${o.id}">
+             <span><b>${o.ikon} ${o.nama}</b><small>${o.desk}</small></span>
+           </button>`).join('');
+
+      } else if (s.rute === undefined) {
+        setJudul('Pilih Rute', 'Pilih rute perjalanan Anda.');
+        html = tombolKembali + daftarRute(s.layanan).map((r, i) =>
+          `<button class="opsi" data-aksi="rute" data-val="${i}">
+             <span><b>${r.nama}</b>${r.tol ? '<small>🛣️ Include Jalan Tol</small>' : ''}</span>
+             <span class="opsi-harga">${r.harga}</span>
+           </button>`).join('');
+
+      } else if (s.layanan === 'reguler' && s.seat === undefined) {
+        const r = P.ruteReguler[s.rute];
+        setJudul('Pilih Tempat Duduk', r.rute);
+        html = tombolKembali + r.seat.map((st, i) =>
+          `<button class="opsi" data-aksi="seat" data-val="${i}">
+             <span><b>${st.nama}</b></span>
+             <span class="opsi-harga">${st.harga}</span>
+           </button>`).join('');
+
+      } else {
+        // Ringkasan + tombol WhatsApp
+        setJudul('Konfirmasi Pesanan', 'Cek dulu, lalu lanjut ke WhatsApp.');
+        let namaLayanan, namaRute, detailSeat = '', harga, pesanWa;
+        if (s.layanan === 'reguler') {
+          const r = P.ruteReguler[s.rute], st = r.seat[s.seat];
+          namaLayanan = 'Travel Reguler'; namaRute = r.rute;
+          detailSeat = `<div><span class="lbl">Tempat duduk</span><span class="val">${st.nama}</span></div>`;
+          harga = st.harga;
+          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Travel Reguler rute ${r.rute}, ${st.nama} (${st.harga}).`;
+        } else if (s.layanan === 'carter') {
+          const r = P.ruteCarter[s.rute];
+          namaLayanan = 'Carter (1 Mobil)'; namaRute = r.rute; harga = r.harga;
+          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Carter rute ${r.rute} (${r.harga}).`;
+        } else {
+          const r = P.ruteBandara[s.rute];
+          namaLayanan = 'Antar Jemput Bandara'; namaRute = r.tujuan; harga = r.harga;
+          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Antar Jemput Bandara tujuan ${r.tujuan} (${r.harga}).`;
+        }
+        html = tombolKembali + `
+          <div class="ringkas">
+            <div><span class="lbl">Layanan</span><span class="val">${namaLayanan}</span></div>
+            <div><span class="lbl">Rute</span><span class="val">${namaRute}</span></div>
+            ${detailSeat}
+            <div><span class="lbl">Harga</span><span class="val harga-final">${harga}</span></div>
+          </div>
+          <a class="btn btn-wa btn-pesan" href="${waLink(pesanWa)}" target="_blank" rel="noopener">💬 Lanjut ke WhatsApp</a>`;
+      }
+      modalBody.innerHTML = html;
+    }
+
+    modalBody.addEventListener('click', e => {
+      const b = e.target.closest('[data-aksi]');
+      if (!b) return;
+      const aksi = b.dataset.aksi, val = b.dataset.val;
+      if (aksi === 'layanan') pesanan.layanan = val;
+      else if (aksi === 'rute') pesanan.rute = Number(val);
+      else if (aksi === 'seat') pesanan.seat = Number(val);
+      else if (aksi === 'kembali') {
+        if (pesanan.seat !== undefined) delete pesanan.seat;
+        else if (pesanan.rute !== undefined) delete pesanan.rute;
+        else delete pesanan.layanan;
+      }
+      renderPesan();
+    });
 
     // Schema markup (SEO - bantu muncul di Google)
     const schema = {
