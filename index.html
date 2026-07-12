@@ -738,15 +738,15 @@
           namaLayanan = 'Travel Reguler'; namaRute = r.rute;
           detailSeat = `<div><span class="lbl">Tempat duduk</span><span class="val">${st.nama}</span></div>`;
           harga = st.harga;
-          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Travel Reguler rute ${r.rute}, ${st.nama} (${st.harga}).`;
+          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Travel Reguler rute ${r.rute}, ${st.nama}.`;
         } else if (s.layanan === 'carter') {
           const r = P.ruteCarter[s.rute];
           namaLayanan = 'Carter (1 Mobil)'; namaRute = r.rute; harga = r.harga;
-          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Carter rute ${r.rute} (${r.harga}).`;
+          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Carter rute ${r.rute}.`;
         } else {
           const r = P.ruteBandara[s.rute];
           namaLayanan = 'Antar Jemput Bandara'; namaRute = r.tujuan; harga = r.harga;
-          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Antar Jemput Bandara tujuan ${r.tujuan} (${r.harga}).`;
+          pesanWa = `Halo ${P.namaBisnis}, saya mau pesan Antar Jemput Bandara tujuan ${r.tujuan}.`;
         }
         html = tombolKembali + `
           <div class="ringkas">
