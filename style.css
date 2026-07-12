@@ -84,12 +84,14 @@ nav { display: flex; align-items: center; justify-content: space-between; height
 
 /* ---------- HERO ---------- */
 .hero {
-  background: linear-gradient(135deg, var(--biru) 0%, var(--biru-tua) 100%);
-  color: #fff; position: relative; overflow: hidden;
-}
-.hero::after {
-  content: ""; position: absolute; right: -120px; top: -120px;
-  width: 420px; height: 420px; background: var(--emas); opacity: .12; border-radius: 50%;
+  position: relative; overflow: hidden; color: #fff;
+  min-height: 580px; display: flex; align-items: center;
+  background:
+    linear-gradient(to right,
+      rgba(8,40,72,.94) 0%, rgba(8,40,72,.86) 26%,
+      rgba(8,40,72,.55) 48%, rgba(8,40,72,.15) 72%, rgba(8,40,72,0) 92%),
+    url('hero-innova.jpg') right center / cover no-repeat;
+  background-color: #082848;
 }
 .hero-inner { position: relative; z-index: 1; max-width: 760px; }
 .hero h1 { font-size: clamp(2rem, 5.5vw, 3.4rem); font-weight: 800; line-height: 1.15; margin-bottom: 20px; }
@@ -271,6 +273,15 @@ footer .logo { justify-content: center; color: #fff; margin-bottom: 10px; }
 @media (max-width: 900px) {
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    background:
+      linear-gradient(to bottom, rgba(8,40,72,.82) 0%, rgba(8,40,72,.9) 100%),
+      url('hero-innova.jpg') center 28% / cover no-repeat;
+    background-color: #082848;
+  }
 }
 @media (max-width: 720px) {
   section { padding: 56px 0; }
