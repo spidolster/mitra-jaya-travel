@@ -143,6 +143,24 @@
     .rute-harga { text-align: right; }
     .rute-harga .harga { font-size: 1.5rem; font-weight: 800; color: var(--emas-tua); }
 
+    /* ---------- HARGA REGULER & CARTER ---------- */
+    #harga { background: var(--putih); }
+    .price-card { position: relative; }
+    .price-card .rute-nama { font-size: 1.2rem; color: var(--biru); display: flex; align-items: center; gap: 8px; }
+    .price-card .durasi { color: var(--abu-teks); font-size: .9rem; margin-bottom: 6px; }
+    .badge-tol {
+      display: inline-block; background: var(--emas); color: var(--biru-tua);
+      font-size: .75rem; font-weight: 700; padding: 3px 12px; border-radius: 50px; margin-bottom: 10px;
+    }
+    .seat-row {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 0; border-top: 1px dashed #e3e9f0;
+    }
+    .seat-row .seat-label { font-weight: 600; font-size: .95rem; }
+    .seat-row .seat-harga { font-size: 1.25rem; font-weight: 800; color: var(--emas-tua); }
+    .seat-row .btn { padding: 9px 18px; font-size: .9rem; flex-shrink: 0; }
+    .harga-sub { margin-top: 60px; }
+
     /* ---------- LAYANAN ---------- */
     .layanan-list { list-style: none; margin: 16px 0 22px; }
     .layanan-list li { padding: 7px 0; color: var(--abu-teks); display: flex; gap: 10px; align-items: flex-start; }
@@ -264,6 +282,35 @@
       { tujuan: "Bandara Balikpapan (BPN)", durasi: "5-6 Jam perjalanan",  harga: "Rp 1.100.000" }
     ],
 
+    // --- Harga Travel Reguler (per kursi) ---
+    // "tol: true" akan memunculkan badge "Include Jalan Tol" pada kartu.
+    ruteReguler: [
+      {
+        rute: "Bontang ⇌ Samarinda",
+        durasi: "±3 Jam perjalanan",
+        tol: false,
+        seat: [
+          { nama: "Seat Tengah", harga: "Rp 200.000" },
+          { nama: "Seat Depan",  harga: "Rp 250.000" }
+        ]
+      },
+      {
+        rute: "Bontang ⇌ Balikpapan",
+        durasi: "±5 Jam perjalanan via Tol",
+        tol: true,
+        seat: [
+          { nama: "Seat Tengah", harga: "Rp 350.000" },
+          { nama: "Seat Depan",  harga: "Rp 400.000" }
+        ]
+      }
+    ],
+
+    // --- Harga Carter (1 mobil penuh) ---
+    ruteCarter: [
+      { rute: "Bontang ⇌ Samarinda (Kota)", durasi: "±3 Jam perjalanan",         tol: false, harga: "Rp 650.000" },
+      { rute: "Bontang ⇌ Balikpapan",       durasi: "±5 Jam perjalanan via Tol", tol: true,  harga: "Rp 1.150.000" }
+    ],
+
     // --- Layanan Utama ---
     layanan: [
       {
@@ -329,6 +376,7 @@
         </a>
         <ul class="nav-links" id="navLinks">
           <li><a href="#beranda">Beranda</a></li>
+          <li><a href="#harga">Harga</a></li>
           <li><a href="#bandara">Tarif Bandara</a></li>
           <li><a href="#layanan">Layanan</a></li>
           <li><a href="#oleholeh">Oleh-Oleh</a></li>
@@ -350,6 +398,23 @@
         <a class="btn btn-outline" id="heroReguler" href="#">🚌 Pesan Reguler</a>
       </div>
       <div class="stats" id="stats"></div>
+    </div>
+  </section>
+
+  <!-- HARGA REGULER & CARTER -->
+  <section id="harga">
+    <div class="container">
+      <div class="section-head">
+        <h2>Harga Travel Reguler</h2>
+        <p>Harga per kursi — pilih posisi duduk sesuai kenyamanan Anda. Jemput &amp; antar sampai alamat.</p>
+      </div>
+      <div class="grid grid-2" id="regulerList"></div>
+
+      <div class="section-head harga-sub">
+        <h2>Harga Carter (1 Mobil)</h2>
+        <p>Satu mobil penuh untuk Anda serombongan. Jadwal fleksibel, BBM &amp; driver sudah termasuk.</p>
+      </div>
+      <div class="grid grid-2" id="carterList"></div>
     </div>
   </section>
 
@@ -461,6 +526,39 @@
         <div class="rute-harga">
           <div class="harga">${r.harga}</div>
           <small style="color:var(--abu-teks)">Klik untuk pesan</small>
+        </div>
+      </a>
+    `).join('');
+
+    // Harga travel reguler (per kursi)
+    document.getElementById('regulerList').innerHTML = P.ruteReguler.map(r => `
+      <div class="card price-card">
+        <h3 class="rute-nama">🚐 ${r.rute}</h3>
+        <div class="durasi">🕒 ${r.durasi}</div>
+        ${r.tol ? '<span class="badge-tol">🛣️ Include Jalan Tol</span>' : ''}
+        ${r.seat.map(s => `
+          <div class="seat-row">
+            <div>
+              <div class="seat-label">${s.nama}</div>
+              <div class="seat-harga">${s.harga}</div>
+            </div>
+            <a class="btn btn-wa" href="${waLink(`Halo ${P.namaBisnis}, saya mau pesan Travel Reguler rute ${r.rute}, ${s.nama} (${s.harga}).`)}">💬 Pesan</a>
+          </div>
+        `).join('')}
+      </div>
+    `).join('');
+
+    // Harga carter (1 mobil)
+    document.getElementById('carterList').innerHTML = P.ruteCarter.map(r => `
+      <a class="rute" href="${waLink(`Halo ${P.namaBisnis}, saya mau Carter rute ${r.rute} (${r.harga}).`)}">
+        <div class="rute-info">
+          <h3>🚐 ${r.rute}</h3>
+          <div class="durasi">🕒 ${r.durasi}</div>
+          ${r.tol ? '<span class="badge-tol">🛣️ Include Jalan Tol</span>' : ''}
+        </div>
+        <div class="rute-harga">
+          <div class="harga">${r.harga}</div>
+          <small style="color:var(--abu-teks)">per mobil — klik untuk pesan</small>
         </div>
       </a>
     `).join('');
