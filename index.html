@@ -86,11 +86,11 @@
       width: 40px; height: 40px; background: var(--biru); color: var(--emas);
       border-radius: 10px; display: grid; place-items: center; font-size: 1.3rem;
     }
-    .nav-links { display: flex; gap: 30px; list-style: none; }
-    .nav-links a { font-weight: 500; color: var(--biru-tua); transition: .2s; white-space: nowrap; }
-    .nav-links a:hover { color: var(--emas-tua); }
     .nav-cta { display: inline-flex; }
-    .menu-toggle { display: none; background: none; border: none; font-size: 1.6rem; color: var(--biru); cursor: pointer; }
+    @media (max-width: 480px) {
+      .logo { font-size: 1.05rem; }
+      .nav-cta { padding: 10px 16px; font-size: .9rem; }
+    }
 
     /* ---------- HERO ---------- */
     .hero {
@@ -275,22 +275,6 @@
       .grid-4 { grid-template-columns: repeat(2, 1fr); }
       .grid-3 { grid-template-columns: repeat(2, 1fr); }
     }
-    /* Di lebar menengah, rapatkan navbar agar semua muat satu baris. */
-    @media (max-width: 1100px) {
-      .nav-links { gap: 18px; }
-      .nav-links a { font-size: .95rem; }
-      .nav-cta { padding: 12px 20px; font-size: .95rem; }
-    }
-    /* Navbar penuh butuh ±1000px; di bawah itu pakai menu hamburger
-       agar link tidak berdesakan / turun baris di layar tablet. */
-    @media (max-width: 1000px) {
-      .nav-links, .nav-cta { display: none; }
-      .menu-toggle { display: block; }
-      .nav-links.open {
-        display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0;
-        background: #fff; padding: 20px; gap: 16px; box-shadow: 0 10px 20px rgba(0,0,0,.08);
-      }
-    }
     @media (max-width: 720px) {
       section { padding: 56px 0; }
       .stats { grid-template-columns: repeat(2, 1fr); gap: 28px; }
@@ -429,16 +413,7 @@
           <span class="logo-icon">🚐</span>
           <span id="navNama">Mitra Jaya Travel</span>
         </a>
-        <ul class="nav-links" id="navLinks">
-          <li><a href="#beranda">Beranda</a></li>
-          <li><a href="#harga">Harga</a></li>
-          <li><a href="#bandara">Tarif Bandara</a></li>
-          <li><a href="#layanan">Layanan</a></li>
-          <li><a href="#oleholeh">Oleh-Oleh</a></li>
-          <li><a href="#kontak">Kontak</a></li>
-        </ul>
         <button class="btn btn-wa nav-cta" onclick="bukaPesan()">💬 Pesan Sekarang</button>
-        <button class="menu-toggle" id="menuToggle" aria-label="Menu">☰</button>
       </nav>
     </div>
   </header>
@@ -450,26 +425,8 @@
       <p id="heroTagline"></p>
       <div class="hero-btns">
         <button class="btn btn-emas" onclick="bukaPesan()">🚐 Pesan Sekarang</button>
-        <a class="btn btn-outline" href="#harga">Lihat Harga</a>
       </div>
       <div class="stats" id="stats"></div>
-    </div>
-  </section>
-
-  <!-- HARGA REGULER & CARTER -->
-  <section id="harga">
-    <div class="container">
-      <div class="section-head">
-        <h2>Harga Travel Reguler</h2>
-        <p>Harga per kursi — pilih posisi duduk sesuai kenyamanan Anda. Jemput &amp; antar sampai alamat.</p>
-      </div>
-      <div class="grid grid-2" id="regulerList"></div>
-
-      <div class="section-head harga-sub">
-        <h2>Harga Carter (1 Mobil)</h2>
-        <p>Satu mobil penuh untuk Anda serombongan. Jadwal fleksibel, BBM &amp; driver sudah termasuk.</p>
-      </div>
-      <div class="grid grid-2" id="carterList"></div>
     </div>
   </section>
 
@@ -481,6 +438,23 @@
         <p>Layanan antar jemput bandara profesional dengan armada terbaik</p>
       </div>
       <div class="grid grid-2" id="ruteList"></div>
+    </div>
+  </section>
+
+  <!-- TRAVEL REGULER & CARTER -->
+  <section id="harga">
+    <div class="container">
+      <div class="section-head">
+        <h2>Travel Reguler</h2>
+        <p>Harga per kursi — pilih posisi duduk sesuai kenyamanan Anda. Jemput &amp; antar sampai alamat.</p>
+      </div>
+      <div class="grid grid-2" id="regulerList"></div>
+
+      <div class="section-head harga-sub">
+        <h2>Carter (1 Mobil)</h2>
+        <p>Satu mobil penuh untuk Anda serombongan. Jadwal fleksibel, BBM &amp; driver sudah termasuk.</p>
+      </div>
+      <div class="grid grid-2" id="carterList"></div>
     </div>
   </section>
 
@@ -670,18 +644,13 @@
     // Update judul tab & SEO dari nama bisnis
     document.title = `${P.namaBisnis} - Layanan Antar Jemput & Carter Mobil`;
 
-    // Menu HP
-    const toggle = document.getElementById('menuToggle');
-    const links = document.getElementById('navLinks');
-    toggle.addEventListener('click', () => links.classList.toggle('open'));
-    links.addEventListener('click', e => { if (e.target.tagName === 'A') links.classList.remove('open'); });
 
     // ================= POPUP PEMESANAN (WIZARD) =================
     // Alur: Pilih Layanan -> Pilih Rute -> Pilih Seat (reguler saja) -> Konfirmasi -> WhatsApp
     const LAYANAN_OPSI = [
+      { id: 'bandara', ikon: '✈️', nama: 'Travel Bandara',        desk: 'Antar jemput dari / ke bandara' },
       { id: 'reguler', ikon: '🚌', nama: 'Travel Reguler',        desk: 'Harga per kursi, jadwal tetap' },
-      { id: 'carter',  ikon: '🚐', nama: 'Carter (1 Mobil)',      desk: 'Mobil penuh, jadwal fleksibel' },
-      { id: 'bandara', ikon: '✈️', nama: 'Antar Jemput Bandara',  desk: 'Dari / ke bandara' }
+      { id: 'carter',  ikon: '🚐', nama: 'Carter (1 Mobil)',      desk: 'Mobil penuh, jadwal fleksibel' }
     ];
     const modalEl   = document.getElementById('pesanModal');
     const modalBody = document.getElementById('modalBody');
