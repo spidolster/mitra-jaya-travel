@@ -81,13 +81,13 @@
       box-shadow: 0 2px 20px rgba(0,0,0,.05);
     }
     nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.25rem; color: var(--biru); }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.25rem; color: var(--biru); white-space: nowrap; }
     .logo-icon {
       width: 40px; height: 40px; background: var(--biru); color: var(--emas);
       border-radius: 10px; display: grid; place-items: center; font-size: 1.3rem;
     }
     .nav-links { display: flex; gap: 30px; list-style: none; }
-    .nav-links a { font-weight: 500; color: var(--biru-tua); transition: .2s; }
+    .nav-links a { font-weight: 500; color: var(--biru-tua); transition: .2s; white-space: nowrap; }
     .nav-links a:hover { color: var(--emas-tua); }
     .nav-cta { display: inline-flex; }
     .menu-toggle { display: none; background: none; border: none; font-size: 1.6rem; color: var(--biru); cursor: pointer; }
@@ -228,14 +228,24 @@
       .grid-4 { grid-template-columns: repeat(2, 1fr); }
       .grid-3 { grid-template-columns: repeat(2, 1fr); }
     }
-    @media (max-width: 720px) {
-      section { padding: 56px 0; }
+    /* Di lebar menengah, rapatkan navbar agar semua muat satu baris. */
+    @media (max-width: 1100px) {
+      .nav-links { gap: 18px; }
+      .nav-links a { font-size: .95rem; }
+      .nav-cta { padding: 12px 20px; font-size: .95rem; }
+    }
+    /* Navbar penuh butuh ±1000px; di bawah itu pakai menu hamburger
+       agar link tidak berdesakan / turun baris di layar tablet. */
+    @media (max-width: 1000px) {
       .nav-links, .nav-cta { display: none; }
       .menu-toggle { display: block; }
       .nav-links.open {
         display: flex; flex-direction: column; position: absolute; top: 72px; left: 0; right: 0;
         background: #fff; padding: 20px; gap: 16px; box-shadow: 0 10px 20px rgba(0,0,0,.08);
       }
+    }
+    @media (max-width: 720px) {
+      section { padding: 56px 0; }
       .stats { grid-template-columns: repeat(2, 1fr); gap: 28px; }
       .grid-2, .grid-3, .grid-4, .kontak-grid { grid-template-columns: 1fr; }
       .rute { flex-direction: column; align-items: flex-start; }
